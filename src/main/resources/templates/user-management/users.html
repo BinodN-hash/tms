@@ -1,0 +1,341 @@
+<!doctype html>
+<html layout:decorate="~{layout_fragments/main}"
+      xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:x-transition="http://www.w3.org/1999/xhtml">
+<body>
+<div layout:fragment="contents">
+    <div class="page-content">
+        <div class="container-fluid">
+            
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0">Members</h4>
+                        
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Ticket Management System</a></li>
+                                <li class="breadcrumb-item active">Members</li>
+                            </ol>
+                        </div>
+                    
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+            
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card" id="customerList">
+                        <div class="card-header border-bottom-dashed">
+                            
+                            <div class="row g-4 align-items-center">
+                                <div class="col-sm">
+                                    <div>
+                                        <h5 class="card-title mb-0">Members List</h5>
+                                    </div>
+                                </div>
+                                <div class="col-sm-auto">
+                                    <div>
+<!--                                        <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i></button>-->
+                                        <button type="button" class="btn btn-secondary add-btn" data-bs-toggle="modal" id="create-btn" data-bs-target="#showModal"><i class="ri-add-line align-bottom me-1"></i> Create User</button>
+                                        <button type="button" class="btn btn-info"><i class="ri-file-download-line align-bottom me-1"></i> Export</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body border-bottom-dashed border-bottom">
+                            <form>
+                                <div class="row g-3">
+                                    <div class="col-xl-6">
+                                        <div class="search-box">
+                                            <input type="text" class="form-control search" placeholder="Search for customer, email, phone, status or something...">
+                                            <i class="ri-search-line search-icon"></i>
+                                        </div>
+                                    </div>
+                                    <!--end col-->
+                                    <div class="col-xl-6">
+                                        <div class="row g-3">
+                                            <div class="col-sm-4">
+                                                <div class="">
+                                                    <input type="text" class="form-control" id="datepicker-range" data-provider="flatpickr" data-date-format="d M, Y" data-range-date="true" placeholder="Select date">
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                            <div class="col-sm-4">
+                                                <div>
+                                                    <select class="form-control" data-plugin="choices" data-choices data-choices-search-false name="choices-single-default" id="idStatus">
+                                                        <option value="">Status</option>
+                                                        <option value="all" selected>All</option>
+                                                        <option th:value="${user.status.ACTIVE}" th:text="${user.status.ACTIVE}"></option>
+                                                        <option th:value="${user.status.BLOCKED}" th:text="${user.status.BLOCKED}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                            
+                                            <div class="col-sm-4">
+                                                <div>
+                                                    <button type="button" class="btn btn-primary w-100" onclick="SearchData();"> <i class="ri-equalizer-fill me-2 align-bottom"></i>Filters</button>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end row-->
+                            </form>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <div class="table-responsive table-card mb-1">
+                                    <table class="table align-middle" id="customerTable">
+                                        <thead class="table-light text-muted">
+                                        <tr>
+                                            <th scope="col" style="width: 50px;">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="checkAll" value="option">
+                                                </div>
+                                            </th>
+                                            
+                                            <th class="sort" data-sort="customer_name">Name</th>
+                                            <th class="sort" data-sort="email">Email Address</th>
+                                            <th class="sort" data-sort="role">User Role</th>
+                                            <th class="sort" data-sort="date">Created Date</th>
+                                            <th class="sort" data-sort="status">Status</th>
+                                            <th class="sort" data-sort="action">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="list form-check-all">
+                                        <tr th:each="user, i: ${users}">
+                                            <th scope="row">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="chk_child" value="option1">
+                                                </div>
+                                            </th>
+                                            <td class="customer_name" th:text="${user.name}"></td>
+                                            <td class="email" th:text="${user.email}"></td>
+                                            <td class="email" th:text="${user.role.name}"></td>
+                                            <td class="date" th:text="${{user.creationDate}}"></td>
+                                            <td class="status">
+                                                <span th:classappend="${user.status == user.status.BLOCKED} ? 'badge-soft-danger' : 'badge-soft-success '" class="badge text-uppercase" th:text="${user.status}"></span>
+                                            </td>
+                                            <td>
+                                                <ul class="list-inline hstack mb-0">
+                                                    <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
+                                                        <button type="button" data-bs-target="#userEdit" th:attr="data-bs-id=${user.id},data-bs-name=${user.name}, data-bs-email=${user.email}, data-bs-role=${user.role.id}" data-bs-toggle="modal" class="text-secondary btn btn-icon d-inline-block edit-item-btn">
+                                                            <i class="las la-user-edit fs-23"></i>
+                                                        </button>
+                                                    </li>
+                                                    <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Remove">
+                                                        <button  data-bs-toggle="modal" data-bs-target="#deleteRecordModal"
+                                                                th:attrappend="data-bs-whatever=@{/tms/delete/user/{userId}(userId=${user.id})}" class="btn btn-icon text-danger d-inline-block remove-item-btn">
+                                                            <i class="las la-trash fs-23"></i>
+                                                        </button>
+                                                    </li>
+                                                    <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="View">
+                                                        <a th:href="@{/tms/view/user/profile/{userId}(userId=${user.id})}" class="btn btn-icon text-success view-item-btn">
+                                                            <i class="las la-eye fs-23"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="noresult" style="display: none">
+                                        <div class="text-center">
+                                            <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px"></lord-icon>
+                                            <h5 class="mt-2">Sorry! No Data Found</h5>
+                                            <p class="text-muted mb-0">We've searched members We did not find any members for you search.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <div class="pagination-wrap hstack gap-2">
+                                        <a class="page-item pagination-prev disabled" href="#">
+                                            Previous
+                                        </a>
+                                        <ul class="pagination listjs-pagination mb-0"></ul>
+                                        <a class="page-item pagination-next" href="#">
+                                            Next
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="showModal" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-light p-3">
+                                            <h5 class="modal-title" id="exampleModalLabel">Add User</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
+                                        </div>
+                                        <form th:action="@{/tms/create/user}" method="post">
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="name" class="form-label">Name</label>
+                                                    <input type="text" id="name" class="form-control" name="name" />
+                                                </div>
+                                                
+                                                <div class="mb-3">
+                                                    <label for="email-field" class="form-label">Email</label>
+                                                    <input type="email" id="email-field" class="form-control" name="email" />
+                                                </div>
+                                                <div class="form-check mb-3 form-switch form-switch-md" dir="ltr">
+                                                    <input type="checkbox" class="form-check-input" name="autoGenerate" id="autogenerate">
+                                                    <label class="form-check-label" for="autogenerate">Generate Password</label>
+                                                </div>
+                                                <div class="mb-3" id="row-password">
+                                                    <label for="password-field" class="form-label">Password</label>
+                                                    <input type="password" id="password-field" class="form-control" name="password" />
+                                                </div>
+                                                
+                                                <div>
+                                                    <label for="role" class="form-label">Role</label>
+                                                    <select class="form-control" data-choices data-choices-search-false name="roleId" id="role">
+                                                        <option></option>
+                                                        <option th:each="role: ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <div class="hstack gap-2 justify-content-end">
+                                                    <button type="submit" class="btn btn-secondary" id="add-btn">Create User</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!--edit user modal-->
+                            <div class="modal fade" id="userEdit" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-light p-3">
+                                            <h5 class="modal-title" id="userEditModal">Edit User Information</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
+                                        </div>
+                                        <form th:action="@{/tms/update/user}" method="post">
+                                            <input type="hidden" id="editUserData" name="id">
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="updateName" class="form-label">Name</label>
+                                                    <input type="text" id="updateName" class="form-control" name="name" />
+                                                </div>
+                        
+                                                <div class="mb-3">
+                                                    <label for="updateEmail" class="form-label">Email</label>
+                                                    <input type="email" id="updateEmail" class="form-control" name="email"  />
+                                                </div>
+                                                <div>
+                                                    <label for="updateRole" class="form-label">Role</label>
+                                                    <select class="form-control" data-choices data-choices-search-false name="role" id="updateRole">
+                                                        <option></option>
+                                                        <option th:each="role: ${roles}" th:value="${role.id}" th:selected="${role.id == user.role.id}" th:text="${role.name}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <div class="hstack gap-2 justify-content-end">
+                                                    <button type="submit" class="btn btn-secondary" id="updateBtn">Update</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Modal -->
+                            <div class="modal fade zoomIn" id="deleteRecordModal" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="btn-close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mt-2 text-center">
+                                                <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
+                                                <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+                                                    <h4>Are you sure ?</h4>
+                                                    <p class="text-muted mx-4 mb-0">Are you sure you want to remove this record ?</p>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                                                <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">Close</button>
+                                                <a type="button" href="#" class="btn w-sm btn-danger" id="delete-record">Yes, Delete It!</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end modal -->
+                        </div>
+                    </div>
+                
+                </div>
+                <!--end col-->
+            </div>
+            <!--end row-->
+        
+        </div>
+        <!-- container-fluid -->
+    </div>
+    <!-- End Page-content -->
+</div>
+<div style="z-index: 11" th:if="${success}">
+    <div id="borderedToast2" class="toast toast-border-success overflow-hidden mt-3" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-body">
+            <div class="d-flex align-items-center">
+                <div class="flex-shrink-0 me-2">
+                    <i class="ri-checkbox-circle-fill align-middle"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <h6 class="mb-0" th:text="${success}"></h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="content-scripts">
+    <script>
+
+        $("#autogenerate").click(function () {
+            if ($("#autogenerate").is(":checked")) {
+                $("#row-password").hide(500);
+            } else {
+                $("#row-password").show(500);
+            }
+        })
+
+
+        var updateModal = document.getElementById('userEdit')
+        updateModal.addEventListener('show.bs.modal', function (event) {
+            // Button that triggered the modal
+            var button = event.relatedTarget
+            // Extract info from data-bs-* attributes
+            var id = button.getAttribute('data-bs-id')
+            var name = button.getAttribute('data-bs-name')
+            var email = button.getAttribute('data-bs-email')
+            var role = button.getAttribute('data-bs-role')
+            $('#editUserData').val(id);
+            $('#updateName').val(name);
+            $('#updateEmail').val(email);
+            $('#updateRole').val(role);
+            
+        })
+
+
+        var confirmModal = document.getElementById('deleteRecordModal')
+        confirmModal.addEventListener('show.bs.modal', function (event) {
+            // Button that triggered the modal
+            var button = event.relatedTarget
+            // Extract info from data-bs-* attributes
+            var whatever = button.getAttribute('data-bs-whatever')
+            var modal = $(this)
+            modal.find('#delete-record').attr('href', whatever);
+        })
+    </script>
+</div>
+</body>
+</html>

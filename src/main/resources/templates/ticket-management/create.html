@@ -1,0 +1,113 @@
+<!doctype html>
+<html layout:decorate="~{layout_fragments/main}"
+      xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:x-transition="http://www.w3.org/1999/xhtml">
+<body>
+<div layout:fragment="contents">
+    <div class="page-content">
+        <div class="container-fluid">
+            
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0">Create Ticket</h4>
+                        
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Tickets Management</a></li>
+                                <li class="breadcrumb-item active">Create Ticket</li>
+                            </ol>
+                        </div>
+                    
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+    
+            <form th:action="@{/tms/create/ticket}" method="post">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label" for="ticket-title-input">Summary</label>
+                                    <input type="text" name="summary" class="form-control" id="ticket-title-input">
+                                </div>
+                    
+                                <div class="mb-3">
+                                    <label class="form-label" for="ticket-description">Describe Issue</label>
+                                    <textarea name="description" id="ticket-description" rows="8" class="form-control"></textarea>
+                                </div>
+                    
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="mb-3 mb-lg-0">
+                                            <label for="choices-priority-input" class="form-label">Priority</label>
+                                            <select name="priority" class="form-select" data-choices data-choices-search-false id="choices-priority-input">
+                                                <option></option>
+                                                <option th:each="priority: ${T(com.tms.model.Priority).values()}"
+                                                        th:value="${priority}" th:text="${priority}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3 mb-lg-0">
+                                            <label for="choices-status-input" class="form-label">Issue in</label>
+                                            <select name="issuedApp" class="form-select" data-choices data-choices-search-false id="choices-status-input">
+                                                <option></option>
+                                                <option th:each="issueIn: ${T(com.tms.model.ApplicationCategory).values()}"
+                                                th:value="${issueIn}" th:text="${issueIn}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end card body -->
+                        </div>
+                        <!-- end card -->
+            
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Screenshot of Issue</h5>
+                            </div>
+                            <div class="card-body">
+                                <input type="file" class="filepond filepond-input-multiple" multiple name="filepond" data-allow-reorder="true" data-max-file-size="3MB" data-max-files="3">
+                            </div>
+                        </div>
+                        <!-- end card -->
+                        <div class="text-end mb-4">
+                            <button type="submit" class="btn btn-secondary w-sm">Create</button>
+                        </div>
+                    </div>
+                    <!-- end col -->
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="choices-lead-input" class="form-label">Assignee</label>
+                                    <select name="assignee" class="form-select" data-choices data-choices-search-false id="choices-lead-input">
+                                        <option value="UNASSIGNED" selected></option>
+                                        <option th:each="user: ${userList}" th:text="${user.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- end card body -->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col -->
+                </div>
+                <!-- end row -->
+            </form>
+        
+        </div>
+        <!-- container-fluid -->
+    </div>
+    <!-- End Page-content -->
+
+</div>
+<div layout:fragment="content-scripts">
+
+</div>
+</body>
+</html>

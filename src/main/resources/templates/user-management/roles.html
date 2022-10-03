@@ -1,0 +1,256 @@
+<!doctype html>
+<html layout:decorate="~{layout_fragments/main}"
+      xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:x-transition="http://www.w3.org/1999/xhtml">
+<body>
+<div layout:fragment="contents">
+    <div class="page-content">
+        <div class="container-fluid">
+            
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0">Roles</h4>
+                        
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">User Management</a></li>
+                                <li class="breadcrumb-item active">Roles</li>
+                            </ol>
+                        </div>
+                    
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+            
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title mb-0">Roles List</h4>
+                        </div><!-- end card header -->
+                        
+                        <div class="card-body">
+                            <div id="customerList">
+                                <div class="row g-4 mb-3">
+                                    <div class="col-sm-auto">
+                                        <div>
+                                            <button type="button" class="btn btn-secondary add-btn" data-bs-toggle="modal" id="create-btn" data-bs-target="#showModal"><i class="ri-add-line align-bottom me-1"></i> Create Role</button>
+<!--                                            <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i></button>-->
+                                        </div>
+                                    </div>
+                                    <div class="col-sm">
+                                        <div class="d-flex justify-content-sm-end">
+                                            <div class="search-box ms-2">
+                                                <input type="text" class="form-control search" placeholder="Search...">
+                                                <i class="ri-search-line search-icon"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="table-responsive table-card mt-3 mb-1">
+                                    <table class="table align-middle table-nowrap" id="customerTable">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th scope="col" style="width: 50px;">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="checkAll" value="option">
+                                                </div>
+                                            </th>
+                                            <th class="sort" data-sort="name">Name</th>
+                                            <th class="sort" data-sort="type">Type</th>
+                                            <th class="sort" data-sort="assigned">Assigned to</th>
+                                            <th class="sort" data-sort="action">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="list form-check-all">
+                                        <tr th:each="role: ${roles}">
+                                            <th scope="row">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="chk_child" value="option1">
+                                                </div>
+                                            </th>
+                                            <td class="name" th:text="${role.name}"></td>
+                                            <td class="type" th:text="${role.type}"></td>
+                                            <td class="assigned">
+                                                <span class="badge badge-soft-secondary">10</span>
+                                            </td>
+                                            <td>
+                                                <ul class="list-inline hstack gap-2 mb-0">
+                                                    <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
+                                                        <button type="button" data-bs-target="#editModal" th:attr="data-bs-id=${role.id},data-bs-name=${role.name}, data-bs-type=${role.type}" data-bs-toggle="modal" class="text-secondary btn btn-icon d-inline-block edit-item-btn">
+                                                            <i class="ri-pencil-fill fs-16"></i>
+                                                        </button>
+                                                    </li>
+                                                    <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Remove">
+                                                        <button  data-bs-toggle="modal" data-bs-target="#deleteRecordModal"
+                                                                th:attrappend="data-bs-whatever=@{/tms/delete/role/{roleId}(roleId=${role.id})}" class="btn btn-icon text-danger d-inline-block remove-item-btn">
+                                                            <i class="ri-delete-bin-5-fill fs-16"></i>
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="noresult" style="display: none">
+                                        <div class="text-center">
+                                            <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px"></lord-icon>
+                                            <h5 class="mt-2">Sorry! No Result Found</h5>
+                                            <p class="text-muted mb-0">We've searched more than 150+ Orders We did not find any orders for you search.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-end">
+                                    <div class="pagination-wrap hstack gap-2">
+                                        <a class="page-item pagination-prev disabled" href="#">
+                                            Previous
+                                        </a>
+                                        <ul class="pagination listjs-pagination mb-0"></ul>
+                                        <a class="page-item pagination-next" href="#">
+                                            Next
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- end card -->
+                    </div>
+                    <!-- end col -->
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+            
+            <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-light p-3">
+                            <h5 class="modal-title" id="exampleModalLabel"></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
+                        </div>
+                        <form method="post" th:action="@{/tms/create/role}">
+                            <div class="modal-body">
+                                
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" id="name" name="name" class="form-control" />
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="type" class="form-label">Role Type</label>
+                                    <select class="form-control" data-choices data-choices-search-false name="roleType" id="type">
+                                        <option></option>
+                                        <option th:each="roleType: ${T(com.tms.model.RoleType).values()}" th:if="${roleType} != 'SUPER_ADMIN'"
+                                                th:value="${roleType}" th:text="${roleType}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="hstack gap-2 justify-content-end">
+                                    <button type="submit" class="btn btn-secondary" id="add-btn">Create Role</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!--Edit modal-->
+            <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-light p-3">
+                            <h5 class="modal-title" id="editModalShow"></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
+                        </div>
+                        <form method="post" th:action="@{/tms/update/role}">
+                            <input type="hidden" id="editRole" name="id">
+                            <div class="modal-body">
+                        
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" id="editName" name="name" class="form-control" />
+                                </div>
+                        
+                                <div class="mb-3">
+                                    <label for="type" class="form-label">Role Type</label>
+                                    <select class="form-control" data-choices data-choices-search-false name="roleType" id="updateType">
+                                        <option></option>
+                                        <option  th:each="roleType: ${T(com.tms.model.RoleType).values()}" th:if="${roleType} != 'SUPER_ADMIN'"
+                                                 th:value="${roleType}" th:text="${roleType}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="hstack gap-2 justify-content-end">
+                                    <button type="submit" class="btn btn-secondary" id="update-btn">Update Role</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Modal -->
+            <div class="modal fade zoomIn" id="deleteRecordModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="btn-close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mt-2 text-center">
+                                <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
+                                <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+                                    <h4>Are you Sure ?</h4>
+                                    <p class="text-muted mx-4 mb-0">Are you Sure You want to Remove this Record ?</p>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                                <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">Close</button>
+                                <a type="button" href="#" class="btn w-sm btn-danger" id="delete-record">Yes, Delete It!</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end modal -->
+        
+        </div>
+        <!-- container-fluid -->
+    </div>
+    <!-- End Page-content -->
+</div>
+<div layout:fragment="content-scripts">
+    <script>
+        var updateModal = document.getElementById('editModal')
+        updateModal.addEventListener('show.bs.modal', function (event) {
+            // Button that triggered the modal
+            var button = event.relatedTarget
+            // Extract info from data-bs-* attributes
+            var id = button.getAttribute('data-bs-id')
+            var name = button.getAttribute('data-bs-name')
+            var type = button.getAttribute('data-bs-type')
+            $('#editRole').val(id);
+            $('#editName').val(name);
+            $('#updateType').val(type);
+
+        })
+
+
+        var confirmModal = document.getElementById('deleteRecordModal')
+        confirmModal.addEventListener('show.bs.modal', function (event) {
+            // Button that triggered the modal
+            var button = event.relatedTarget
+            // Extract info from data-bs-* attributes
+            var whatever = button.getAttribute('data-bs-whatever')
+            var modal = $(this)
+            modal.find('#delete-record').attr('href', whatever);
+        })
+    </script>
+</div>
+</body>
+</html>

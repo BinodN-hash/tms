@@ -1,0 +1,99 @@
+body, html{
+    font-family: 'Nunito', sans-serif !important;
+
+}
+.navbar-menu .navbar-nav .nav-link{
+    font-size: 11px !important;
+    font-weight: bold !important;
+    letter-spacing: 1px !important;
+    font-family: 'Nunito', sans-serif !important;
+
+}
+
+label{
+    font-size: 11px !important;
+    letter-spacing: 1px !important;
+    font-weight: bold !important;
+    text-transform: uppercase;
+}
+button {
+    font-weight: bold !important;
+    font-size: 11px !important;
+    letter-spacing: 1.5px !important;
+    text-transform: uppercase;
+}
+h5{
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    font-size: 13px !important;
+    font-family: 'Nunito', sans-serif !important;
+}
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6{
+    font-family: 'Nunito', sans-serif !important;
+    letter-spacing: 1px;
+
+}
+.sub-heading{
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 9px;
+    font-weight: bold;
+    font-family: 'Nunito', sans-serif !important;
+}
+input{
+    font-size: 0.938rem !important;
+
+}
+.toast-container{
+    background-color: red !important;
+    width: auto;
+    opacity: inherit !important;
+}
+.toast-message{
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 11px !important;
+}
+.toast-error{
+    background-color: red !important;
+}
+
+.page-title-box h4{
+    font-size: 12px !important;
+    font-weight: bold !important;
+
+}
+.card-title{
+    text-transform: uppercase;
+    font-size: 12px !important;
+    font-weight: bold;
+    letter-spacing: 1px;
+
+}
+
+.breadcrumb{
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 10px !important;
+    font-weight: bold !important;
+
+}
+.user-name-text{
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 11px !important;
+    font-weight: bold !important;
+
+}
+.page-title-box{
+    padding: 23px 1.5rem !important;
+
+}
+.btn-secondary{
+    font-weight: bold !important;
+    font-size: 11px !important;
+    letter-spacing: 1.5px !important;
+    text-transform: uppercase;
+
+}
